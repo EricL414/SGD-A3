@@ -21,6 +21,8 @@ public class Menu_GUI : MonoBehaviour
 
 	public GameObject ScorePanel;
 
+	public GameObject lobbyCreationPanel;
+	public GameObject mainMenuPanel;
 
 	// Use this for initialization
 	void Start()
@@ -61,8 +63,15 @@ public class Menu_GUI : MonoBehaviour
     */
 	void StartOnClick()
 	{
-		Application.LoadLevel("MiniGame");
+		//Application.LoadLevel("MiniGame");
 		//SceneManager.LoadScene
+
+		// Load new ui, hide old
+		Debug.Log(gameObject.name);
+		lobbyCreationPanel.SetActive(true);
+		mainMenuPanel.SetActive(false);
+		
+		
 	}
 
 	void InstructionbtnOnClick()

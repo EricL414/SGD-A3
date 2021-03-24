@@ -7,6 +7,7 @@ TagManager:
   - PickUp
   - level1_pass
   - GameFailedPass
+  - LobbyController
   layers:
   - Default
   - TransparentFX
