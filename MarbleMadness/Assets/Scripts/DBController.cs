@@ -11,10 +11,12 @@ public class DBController : MonoBehaviour
     void Start()
     {
         CreateDB();
+
+        /*db testing only - shall be delete from this script*/
         AddRecord("eric", 15.5f, 25);
         AddRecord("bailey", 18.5f, 30);
         DisplayRecordsByPriority();
-
+        /*----------------------------------------------*/
     }
 
     void CreateDB()
@@ -28,12 +30,13 @@ public class DBController : MonoBehaviour
                 command.CommandText = "CREATE TABLE IF NOT EXISTS records (player VARCHAR(20), time REAL, points INTEGER);";
                 command.ExecuteNonQuery();
             }
+            
 
             connection.Close();
         }
     }
 
-    void AddRecord(string player, float time, int point)
+    public void AddRecord(string player, float time, int point)
     {
         using (var connection = new SqliteConnection(dbname))
         {
@@ -50,7 +53,7 @@ public class DBController : MonoBehaviour
         }
     }
 
-    void DisplayRecords()
+    public void DisplayRecordsByAddedTime()
     {
         using(var connection = new SqliteConnection(dbname))
         {
@@ -75,7 +78,7 @@ public class DBController : MonoBehaviour
         }
     }
 
-    void DisplayRecordsByPriority()
+    public void DisplayRecordsByPriority()
     {
         using (var connection = new SqliteConnection(dbname))
         {
@@ -100,9 +103,4 @@ public class DBController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
