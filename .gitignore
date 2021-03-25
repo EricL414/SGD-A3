@@ -71,3 +71,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 /Library/
 /Temp/
+MarbleMadness/Assets/Photon/PhotonChat/Code/changes-chat.txt
+
+
+MarbleMadness/ProjectSettings/ProjectSettings.asset

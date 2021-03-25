@@ -10,46 +10,93 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
 public class PlayerController : MonoBehaviour
 {
     //Global Variables
-    public float speed = 0;
+    public float speed = 10;
 
     private Rigidbody rb;
     private float movementX;
     private float movementY;
 
     private int count;
-    public TextMeshProUGUI countText;
-    public TextMeshProUGUI timerText;
-    public GameObject winPanel;
+    //public TextMeshProUGUI countText;
+    //public TextMeshProUGUI timerText;
+    //public GameObject winPanel;
 
     private int current_level;
     private float[] covermovemnt = { 80,150,80 };
-    public GameObject level1cover;
-    public GameObject level2cover;
-    public GameObject level3cover;
+    //public GameObject level1cover;
+    //public GameObject level2cover;
+    //public GameObject level3cover;
 
-    public AudioSource collectaudio;
-    public AudioSource fallingaudio;
+    //public AudioSource collectaudio;
+    //public AudioSource fallingaudio;
 
     private float timer;
     private bool timerflag;
 
-    public GameObject level1;
-    public GameObject level2;
-    public GameObject level3;
-    public Button TiltBtn;
-    public Text TiltText;
+    //public GameObject level1;
+    //public GameObject level2;
+    //public GameObject level3;
+    //public Button TiltBtn;
+    //public Text TiltText;
+    //public Button DevJumpBtn;
+
     private bool status = false;
     private bool moveflag = false;
 
-    public Button DevJumpBtn;
+    private PhotonView PhotonView;
+    //======= Prefab ===============
+    private GameObject countText;
+    private GameObject timerText;
+    private GameObject winPanel;
+    private GameObject level1cover;
+    private GameObject level2cover;
+    private GameObject level3cover;
+
+    private GameObject collectaudio;
+    private GameObject fallingaudio;
+    private GameObject level1;
+    private GameObject level2;
+    private GameObject level3;
+    private GameObject TiltBtn;
+    private GameObject TiltText;
+    private GameObject DevJumpBtn;
+
+    private GameObject Camera;
+    private Vector3 offset;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        PhotonView = GetComponent<PhotonView>();
+        
+
+        countText = GameObject.Find("Canvas/CountText");
+        timerText = GameObject.Find("Canvas/TimerPanel/TimerText");
+        winPanel = GameObject.Find("Canvas/WinPanel");
+        level1cover = GameObject.Find("Level1/Grounds/hole1cover");
+        level2cover = GameObject.Find("Level2/Grounds/hole2cover");
+        level3cover = GameObject.Find("Level3/Grounds/hole3cover");
+        collectaudio = GameObject.Find("CollectAudio");
+        fallingaudio = GameObject.Find("FallingAudio");
+        level1 = GameObject.Find("Level1");
+        level2 = GameObject.Find("Level2");
+        level3 = GameObject.Find("Level3");
+        TiltBtn = GameObject.Find("Canvas/TiltBtn");
+        TiltText = GameObject.Find("Canvas/TiltBtn/Text");
+        DevJumpBtn = GameObject.Find("Canvas/DevPanel/DevJumpBtn");
+
+        Camera = GameObject.Find("Main Camera");
+
+        offset = Camera.transform.position - transform.position;
+
+
+
         rb = GetComponent<Rigidbody>();
         count = 0;
         current_level = 1;
@@ -84,8 +131,13 @@ public class PlayerController : MonoBehaviour
     */
     void SetCountText()
     {
-        countText.text = "Count: " + count.ToString();
-        if(count >= 30)
+        if (PhotonView.IsMine)
+        {
+            countText.GetComponent<TextMeshProUGUI>().text = "Count: " + count.ToString();
+
+        }
+
+        if (count >= 30)
         {
             Text winText = winPanel.GetComponentInChildren<Text>();
             winText.text = "You collected all 30 pickups and win the game!";
@@ -107,7 +159,7 @@ public class PlayerController : MonoBehaviour
         if(timerflag==true) //check the timer
         {
             timer -= Time.deltaTime;
-            timerText.text = "Time Left: " + timer.ToString("0.00");
+            timerText.GetComponent<TextMeshProUGUI>().text = "Time Left: " + timer.ToString("0.00");
             if (timer < 0)  //run out of the time
             {
                 Time.timeScale = 0;
@@ -152,7 +204,7 @@ public class PlayerController : MonoBehaviour
         {
             if (status == true)
             {
-                TiltText.text = "Click me again to restore!";
+                TiltText.GetComponent<Text>().text = "Click me again to restore!";
                 level1.transform.Rotate(new Vector3(-25, 0, 0) * Time.deltaTime);
                 level2.transform.Rotate(new Vector3(-25, 0, 0) * Time.deltaTime);
                 level3.transform.Rotate(new Vector3(-25, 0, 0) * Time.deltaTime);
@@ -163,7 +215,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                TiltText.text = "There is no spoon! ";
+                TiltText.GetComponent<Text>().text = "There is no spoon! ";
                 level1.transform.Rotate(new Vector3(25, 0, 0) * Time.deltaTime);
                 level2.transform.Rotate(new Vector3(25, 0, 0) * Time.deltaTime);
                 level3.transform.Rotate(new Vector3(25, 0, 0) * Time.deltaTime);
@@ -173,14 +225,19 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        
+    }
 
+    void LateUpdate()
+    {
+        Camera.transform.position = transform.position + offset;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag("PickUp"))   //pick up event
         {
-            collectaudio.Play();
+            collectaudio.GetComponent<AudioSource>().Play();
             other.gameObject.SetActive(false);
             count++;
             SetCountText();
@@ -189,7 +246,7 @@ public class PlayerController : MonoBehaviour
 
         if(other.gameObject.CompareTag("level1_pass"))  //level passing
         {
-            fallingaudio.Play();
+            fallingaudio.GetComponent<AudioSource>().Play();
             current_level++;
         }
 
@@ -217,7 +274,7 @@ public class PlayerController : MonoBehaviour
         {
             current_level++;
             count = 10;
-            countText.text = "Count: " + count.ToString();
+            countText.GetComponent<TextMeshProUGUI>().text = "Count: " + count.ToString();
             transform.position = new Vector3(0, -37, 0);
             
         }
@@ -225,7 +282,7 @@ public class PlayerController : MonoBehaviour
         {
             current_level++;
             count = 20;
-            countText.text = "Count: " + count.ToString();
+            countText.GetComponent<TextMeshProUGUI>().text = "Count: " + count.ToString();
             transform.position = new Vector3(0, -72, 0);
             
         }
