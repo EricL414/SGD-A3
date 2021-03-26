@@ -67,11 +67,11 @@ public class Menu_GUI : MonoBehaviour
 		//SceneManager.LoadScene
 
 		// Load new ui, hide old
-		Debug.Log(gameObject.name);
-		lobbyCreationPanel.SetActive(true);
-		mainMenuPanel.SetActive(false);
+		//Debug.Log(gameObject.name);
+		//lobbyCreationPanel.SetActive(true);
+		//mainMenuPanel.SetActive(false);
 		
-		
+		Application.LoadLevel("Lobby");		
 	}
 
 	void InstructionbtnOnClick()
