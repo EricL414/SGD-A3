@@ -74,3 +74,7 @@ crashlytics-build.properties
 
 # Additions
 *.vscode
+
+Assets/Photon/
+*.db
+ProjectSettings/ProjectSettings.asset
