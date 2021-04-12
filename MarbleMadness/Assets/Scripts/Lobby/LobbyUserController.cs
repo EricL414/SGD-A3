@@ -55,18 +55,20 @@ public class LobbyUserController : MonoBehaviourPun
     }
 
     [PunRPC]
-    void SetColourRPC(int index) {
+    void SetColourRPC(int index, PhotonMessageInfo info) {
         Color c = lobbyController.colours[index];
         selectedColour.color = c;
+
+        info.Sender.CustomProperties["colour"] = index;
     }
 
     [PunRPC]
     void SetNameRPC(string playerName, PhotonMessageInfo info) {
         outputText.text = playerName;
 
-        if (!photonView.IsMine) {
-            info.Sender.CustomProperties["name"] = playerName;
-        }
+        //if (!photonView.IsMine) {
+        info.Sender.CustomProperties["name"] = playerName;
+        //}
     }
 
     public void HideEdit() {

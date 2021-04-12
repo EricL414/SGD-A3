@@ -7,19 +7,19 @@ using Photon.Realtime;
 
 public class LobbyController : MonoBehaviourPunCallbacks
 {
-    public GameObject playerList;
     public int playerCount = 0;
     public Text hostIP;
 
     public List<Color> colours;
 
     public GameObject startGameButton;
-    public static GameObject playerDetails;
+    public static Player[] playerDetails;
 
     // Start is called before the first frame update
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public override void OnConnectedToMaster()
@@ -53,16 +53,16 @@ public class LobbyController : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        int count = 0;
         foreach (Player player in PhotonNetwork.PlayerList) {
-            count++;
-            Debug.Log("Name: " + player.CustomProperties["name"]);
+            //Debug.Log("Name: " + player.CustomProperties["name"]);
+            //Debug.Log("Colour: " + player.CustomProperties["colour"]);
         }
-        Debug.Log("Count: " + count);
     }
 
     public void StartGame() {
-        playerDetails = playerList;
-        PhotonNetwork.LoadLevel("MiniGame");
+        playerDetails = PhotonNetwork.PlayerList;
+        if (PhotonNetwork.IsMasterClient) {
+            PhotonNetwork.LoadLevel("MiniGame");
+        }
     }
 }
